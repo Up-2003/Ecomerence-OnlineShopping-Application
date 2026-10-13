@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Cart')}"></head>
+<body>
+
+<nav th:replace="~{layout/base :: nav}"></nav>
+
+<main class="container my-4">
+    <h1><i class="bi bi-cart"></i> Shopping Cart</h1>
+
+    <div th:if="${cart.items.isEmpty()}" class="text-center py-5">
+        <i class="bi bi-cart-x display-1 text-muted"></i>
+        <p class="lead mt-3">Your cart is empty</p>
+        <a th:href="@{/products}" class="btn btn-primary">Continue Shopping</a>
+    </div>
+
+    <div th:unless="${cart.items.isEmpty()}" class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <table class="table mb-0">
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${cart.items}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img th:src="${item.product.imageUrl}"
+                                     style="width: 50px; height: 50px; object-fit: cover;"
+                                     class="rounded me-2">
+                                <a th:href="@{/products/{id}(id=${item.product.id})}"
+                                   th:text="${item.product.name}"></a>
+                            </div>
+                        </td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(item.product.price, 1, 2)}"></td>
+                        <td>
+                            <form th:action="@{/cart/update}" method="post" class="d-flex">
+                                <input type="hidden" name="itemId" th:value="${item.id}">
+                                <input type="number" name="quantity" th:value="${item.quantity}"
+                                       min="1" class="form-control form-control-sm"
+                                       style="width: 70px;" onchange="this.form.submit()">
+                            </form>
+                        </td>
+                        <td class="fw-bold text-primary"
+                            th:text="'$' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}"></td>
+                        <td>
+                            <form th:action="@{/cart/remove}" method="post">
+                                <input type="hidden" name="itemId" th:value="${item.id}">
+                                <button class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Order Summary</h5>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span>Total:</span>
+                        <span class="h4 text-primary"
+                              th:text="'$' + ${#numbers.formatDecimal(cart.total, 1, 2)}"></span>
+                    </div>
+                    <a th:href="@{/orders/checkout}" class="btn btn-success btn-lg w-100 mt-3">
+                        <i class="bi bi-credit-card"></i> Checkout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>

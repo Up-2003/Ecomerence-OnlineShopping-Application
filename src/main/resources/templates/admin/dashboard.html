@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head('Admin Dashboard')}"></head>
+<body>
+
+<nav th:replace="~{layout/base :: nav}"></nav>
+
+<main class="container my-4">
+    <h1>Admin Dashboard</h1>
+
+    <!-- Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h6">Products</div>
+                            <div class="display-6" th:text="${productCount}">0</div>
+                        </div>
+                        <i class="bi bi-box-seam display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h6">Orders</div>
+                            <div class="display-6" th:text="${orderCount}">0</div>
+                        </div>
+                        <i class="bi bi-receipt display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h6">Users</div>
+                            <div class="display-6" th:text="${userCount}">0</div>
+                        </div>
+                        <i class="bi bi-people display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h6">Categories</div>
+                            <div class="display-6" th:text="${categoryCount}">0</div>
+                        </div>
+                        <i class="bi bi-tags display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mb-4">
+        <a th:href="@{/admin/products/new}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add Product
+        </a>
+        <a th:href="@{/admin/products}" class="btn btn-outline-primary">
+            <i class="bi bi-box-seam"></i> Manage Products
+        </a>
+        <a th:href="@{/admin/orders}" class="btn btn-outline-success">
+            <i class="bi bi-receipt"></i> Manage Orders
+        </a>
+        <a th:href="@{/admin/categories}" class="btn btn-outline-info">
+            <i class="bi bi-tags"></i> Categories
+        </a>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="card">
+        <div class="card-header"><h5 class="mb-0">Recent Orders</h5></div>
+        <table class="table mb-0">
+            <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="o : ${recentOrders}">
+                <td th:text="${o.orderNumber}"></td>
+                <td th:text="${o.user.username}"></td>
+                <td th:text="'$' + ${#numbers.formatDecimal(o.totalAmount, 1, 2)}"></td>
+                <td>
+                    <span class="badge bg-secondary" th:text="${o.status.label}"></span>
+                </td>
+                <td th:text="${#temporals.format(o.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>
+                    <a th:href="@{/admin/orders/{id}(id=${o.id})}"
+                       class="btn btn-sm btn-outline-primary">View</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>
