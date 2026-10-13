@@ -1,3 +1,47 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: onlineshopping
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecomerence_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: SA03@sadm
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect  # <- (ဒီနေရာမှာ MYSQL ကနေ MySQLDialect သို့ ပြင်ထားပါတယ် - S အသေး)
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 10MB
+
+logging:
+  level:
+    com.ecomerence.onlineshopping: DEBUG
+    org.springframework.security: INFO
+
+app:
+  upload:
+    dir: ./uploads
+  pagination:
+    default-size: 12

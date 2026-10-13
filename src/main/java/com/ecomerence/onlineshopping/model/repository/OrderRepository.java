@@ -1,0 +1,20 @@
+package com.ecomerence.onlineshopping.model.repository;
+
+import com.ecomerence.onlineshopping.model.entity.Order;
+import com.ecomerence.onlineshopping.model.entity.OrderStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface OrderRepository extends JpaRepository<Order,Long> {
+
+    Page<Order> findByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
+
+    Optional<Order> findByOrderNumber(String orderNumber);
+    List<Order> findByStatusOrderByCreatedAtDesc(OrderStatus orderStatus);
+}
